@@ -83,8 +83,6 @@ class user:
             cursor.close()
             conn.close()
 
-    #TODO To update user details
-
     # Get the particular user details by passing id
     def get(user_id):
         try:

@@ -1,14 +1,14 @@
-#import mysql.connector as connector
+import mysql.connector as connector
 
-#con = connector.connect(host='localhost',user='root',password='****',database='mathlete_mind_edtech')
-#print(con)
+con = connector.connect(host='localhost', user='root', password='', database='healthy_kinnect')
+print(con)
 
-#from flask import Flask
-#app = Flask(__name__)
-#@app.route('/')
-#def hello_world():
- #   return 'Hello world! Test'
+from flask import Flask
+app = Flask(__name__)
+@app.route('/')
+def hello_world():
+    return 'Hello world! Test'
 
-#from dotenv import load_dotenv
+from dotenv import load_dotenv
 
-#print('111')
+print('111')
