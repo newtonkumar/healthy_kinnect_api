@@ -68,7 +68,7 @@ class user:
             conn = mysql.connect()
             cursor = conn.cursor(pymysql.cursors.DictCursor)
             # Get records from database table
-            sqlQuery = "SELECT * FROM students"
+            sqlQuery = "SELECT * FROM auth_user auth_u INNER JOIN accounts acc ON acc.user_id=auth_u.id"
             cursor.execute(sqlQuery)
             rows = cursor.fetchall()
             conn.commit()
@@ -83,52 +83,15 @@ class user:
             cursor.close()
             conn.close()
 
-    # To update student details
-    def update():
-        try:
-            _json = request.json
-            _student_id = _json['id']
-            _roll_no = _json['roll_no']
-            _first_name = _json['first_name']
-            _last_name = _json['last_name']
-            _class = _json['class']
-            _age = _json['age']
-            _address = _json['address']
-            _phone = _json['phone']
-            _whatsapp = _json['whatsapp']
-            _status = _json['status']
-            _modified_at = datetime.now()
+    #TODO To update user details
 
-            if _student_id and request.method == 'PUT':
-                # Update query for student records
-                sqlQuery = "UPDATE students SET roll_no=%s, first_name=%s, last_name=%s, class=%s, age=%s, address=%s, phone=%s, whatsapp=%s, status=%s, modified_at=%s WHERE id=%s"
-                data = (
-                    _roll_no, _first_name, _last_name, _class, _age, _address, _phone, _whatsapp, _status, _modified_at,
-                    _student_id)
-                conn = mysql.connect()
-                cursor = conn.cursor()
-                cursor.execute(sqlQuery, data)
-                conn.commit()
-
-                return jsonify(
-                    message='Student details updated successfully',
-                    status=200
-                )
-            else:
-                return student.not_found()
-        except Exception as e:
-            print(e)
-        finally:
-            cursor.close()
-            conn.close()
-
-    # Get the particular student details by passing id
-    def get(student_id):
+    # Get the particular user details by passing id
+    def get(user_id):
         try:
             conn = mysql.connect()
             cursor = conn.cursor(pymysql.cursors.DictCursor)
-            sqlQuery = "SELECT * FROM students WHERE id=%s"
-            cursor.execute(sqlQuery, student_id)
+            sqlQuery = "SELECT * FROM auth_user auth_u INNER JOIN accounts acc ON acc.user_id=auth_u.id WHERE id=%s"
+            cursor.execute(sqlQuery, user_id)
             row = cursor.fetchone()
 
             return jsonify(
@@ -142,16 +105,16 @@ class user:
             conn.close()
 
     # Delete student record
-    def delete(student_id):
+    def delete(user_id):
         try:
             conn = mysql.connect()
             cursor = conn.cursor()
-            sqlQuery = "DELETE FROM students WHERE id=%s"
-            cursor.execute(sqlQuery, (student_id))
+            sqlQuery = "DELETE FROM auth_user WHERE id=%s"
+            cursor.execute(sqlQuery, (user_id))
             conn.commit()
 
             return jsonify(
-                message="Student deleted successfully",
+                message="User has been deleted successfully",
                 status=200
             )
         except Exception as e:
