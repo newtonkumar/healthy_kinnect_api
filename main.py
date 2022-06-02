@@ -14,7 +14,7 @@ def register_user():
 
 @app.route('/v1/user/list', methods=['GET'])
 def list_user():
-    user.list()
+    return user.list()
 
 
 @app.route('/v1/user/<int:user_id>', methods=['GET'])

@@ -68,7 +68,13 @@ class user:
             conn = mysql.connect()
             cursor = conn.cursor(pymysql.cursors.DictCursor)
             # Get records from database table
-            sqlQuery = "SELECT * FROM auth_user auth_u INNER JOIN accounts acc ON acc.user_id=auth_u.id"
+            sqlQuery = "SELECT " \
+                       "auth_u.id, auth_u.username, auth_u.first_name, auth_u.last_name, auth_u.email, " \
+                       "auth_u.is_active, " \
+                       "acc.mobile_no, acc.age, acc.address, acc.hobbies, acc.workout_preferences, " \
+                       "acc.dietary_preferences, " \
+                       "acc.gender, acc.location " \
+                       "FROM auth_user auth_u INNER JOIN accounts acc ON acc.user_id=auth_u.id"
             cursor.execute(sqlQuery)
             rows = cursor.fetchall()
             conn.commit()
@@ -88,7 +94,16 @@ class user:
         try:
             conn = mysql.connect()
             cursor = conn.cursor(pymysql.cursors.DictCursor)
-            sqlQuery = "SELECT * FROM auth_user auth_u INNER JOIN accounts acc ON acc.user_id=auth_u.id WHERE id=%s"
+            sqlQuery = "SELECT " \
+                       "auth_u.id, auth_u.username, auth_u.first_name, auth_u.last_name, auth_u.email, " \
+                       "auth_u.is_active, " \
+                       "acc.mobile_no, acc.age, acc.address, acc.hobbies, acc.workout_preferences, " \
+                       "acc.dietary_preferences, " \
+                       "acc.gender, acc.location " \
+                       "FROM auth_user auth_u " \
+                       "INNER JOIN accounts acc ON acc.user_id=auth_u.id " \
+                       "WHERE " \
+                       "auth_u.id=%s"
             cursor.execute(sqlQuery, user_id)
             row = cursor.fetchone()
 
