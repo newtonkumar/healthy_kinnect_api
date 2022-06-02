@@ -27,29 +27,25 @@ class user:
             _workout_preferences = _json['workout_preferences']
             _dietary_preferences = _json['dietary_preferences']
             _gender = _json['gender']
+            _is_superuser = _json['is_superuser']
+            _is_staff = _json['is_staff']
+            _is_active = _json['is_active']
 
             conn = mysql.connect()
             cursor = conn.cursor()
             # Insert into auth_user and get user_id
-            userQuery = "START TRANSACTION;" \
+            userQuery = "BEGIN;" \
                         "INSERT INTO auth_user (first_name, last_name, email, password, is_superuser, username, " \
                         "is_staff, is_active)" \
-                        "VALUES (%s, %s, %s, %s, %s, %s, %s, %s);" \
-                        "SELECT LAST_INSERT_ID() AS user_id; " \
-                        "COMMIT;"
-            user_data = (_first_name, _last_name, _email, _password, False, _username, False, True)
+                        "VALUES(%s, %s, %s, %s, %s, %s, %s, %s);" \
+                        "INSERT INTO accounts(mobile_no, age, address, hobbies, workout_preferences, " \
+                        "dietary_preferences, gender, location, user_id) " \
+                        "VALUES(%s, %s, %s, %s, %s, %s, %s, %s, LAST_INSERT_ID());COMMIT;"
+            user_data = (_first_name, _last_name, _email, _password, _is_superuser, _username, _is_staff, _is_active,
+                         _mobile_no, _age, _address, _hobbies, _workout_preferences, _dietary_preferences,
+                         _gender, _location)
             cursor.execute(userQuery, user_data)
-            result = cursor.fetchone()
 
-            _user_id = result['user_id']
-
-            # insert into accounts table
-            sqlQuery = "INSERT INTO accounts(mobile_no, age, address, hobbies, workout_preferences, " \
-                       "dietary_preferences, gender, location, user_id) " \
-                       "VALUES(%s, %s, %s, %s, %s, %s, %s, %s)"
-            account_data = (_mobile_no, _age, _address, _hobbies, _workout_preferences, _dietary_preferences,
-                            _gender, _location, _user_id)
-            cursor.execute(sqlQuery, account_data)
             conn.commit()
 
             return jsonify(
