@@ -122,8 +122,11 @@ class user:
         try:
             conn = mysql.connect()
             cursor = conn.cursor()
-            sqlQuery = "DELETE FROM auth_user WHERE id=%s"
-            cursor.execute(sqlQuery, (user_id))
+            sqlQuery = "START TRANSACTION;" \
+                       "DELETE FROM accounts WHERE user_id=%s;" \
+                       "DELETE FROM auth_user WHERE id=%s;" \
+                       "COMMIT;"
+            cursor.execute(sqlQuery, (user_id, user_id))
             conn.commit()
 
             return jsonify(
